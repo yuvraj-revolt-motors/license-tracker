@@ -1,0 +1,68 @@
+body {
+    font-family: 'Inter', sans-serif;
+}
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+/* Style for date picker to ensure calendar icon is visible and usable */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+input[type="date"] {
+    position: relative;
+}
+input[type="date"]::after {
+    content: "📅"; /* Calendar icon */
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Make sure the icon doesn't block clicks */
+    color: #4a5568; /* Tailwind gray-700 equivalent */
+}
+
+/* Modal Z-index for layering */
+#custom-modal {
+    z-index: 60; /* Higher than reactivate-modal */
+}
+#reactivate-modal {
+    z-index: 50; /* Base modal layer */
+}
+#ticket-notes-modal {
+    z-index: 55; /* Between reactivate and custom-modal */
+}
+
+/* Toast Notification specific styles (using Tailwind for most) */
+#toast-notification {
+    transition: opacity 0.3s ease-in-out;
+    opacity: 0; /* Hidden by default */
+    visibility: hidden;
+    pointer-events: none; /* Allow clicks to pass through when hidden */
+}
+#toast-notification.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: all;
+}

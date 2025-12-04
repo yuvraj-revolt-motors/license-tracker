@@ -59,7 +59,7 @@ dealer_codes = [
     "DLR-ALI-026", "DLR-AMR-027", "DLR-DEL-028"
 ]
 
-systems = ["DMS", "LSQ", "CRM", "ZOHO"]
+systems = ["DMS", "LSQ", "CRM", "RUPESH"]
 request_types = ["Add License", "Modify License"]
 roles = ["Sales", "Marketing", "Support", "Admin", "User", "Manager"]
 

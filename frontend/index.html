@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>License Tracker</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font for consistent typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide React for icons (used via CDN for simple HTML) -->
+
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<script type="module" src="js/main.js"></script>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+    <!-- Login Page -->
+    <div id="login-page"
+        class="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">License Tracker Login</h2>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username</label>
+                    <input type="text" id="username" name="username" required
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                    <input type="password" id="password" name="password" required
+                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                </div>
+                <div>
+                    <button type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-lg font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="app-container" class="hidden flex flex-grow h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white flex flex-col justify-between py-6 rounded-r-2xl shadow-lg">
+            <div class="px-6">
+                <h1 class="text-3xl font-extrabold mb-8 text-center text-indigo-300">LicenseFlow</h1>
+                <nav>
+                    <ul class="space-y-3">
+                        <li>
+                            <a href="#" data-section="dashboard"
+                                class="sidebar-link flex items-center px-4 py-3 rounded-xl text-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <i class="lucide lucide-layout-dashboard mr-3 w-6 h-6"></i> Dashboard
+                            </a>
+                        </li>
+                        <!-- Removed LSQ Analytics from sidebar as per request -->
+                        <li>
+                            <a href="#" data-section="add-license"
+                                class="sidebar-link flex items-center px-4 py-3 rounded-xl text-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <i class="lucide lucide-plus-circle mr-3 w-6 h-6"></i> Add License
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-section="remove-license"
+                                class="sidebar-link flex items-center px-4 py-3 rounded-xl text-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <i class="lucide lucide-minus-circle mr-3 w-6 h-6"></i> Remove License
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-section="reports"
+                                class="sidebar-link flex items-center px-4 py-3 rounded-xl text-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <i class="lucide lucide-clipboard-list mr-3 w-6 h-6"></i> Reports
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-section="tickets"
+                                class="sidebar-link flex items-center px-4 py-3 rounded-xl text-lg font-medium hover:bg-gray-700 transition duration-150 ease-in-out">
+                                <i class="lucide lucide-ticket mr-3 w-6 h-6"></i> Tickets
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="px-6 mt-8">
+                <button id="logout-button"
+                    class="w-full flex items-center justify-center py-3 px-4 border border-gray-700 rounded-lg shadow-md text-lg font-semibold text-red-300 bg-gray-700 hover:bg-gray-600 hover:text-red-400 transition duration-150 ease-in-out">
+                    <i class="lucide lucide-log-out mr-2 w-6 h-6"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="main-content-section">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-8">Dashboard Overview</h2>
+
+                <!-- System-specific License Capacity Cards -->
+                <div id="system-capacity-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <!-- Cards will be dynamically inserted here by JavaScript -->
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-12">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">License Distribution by System</h3>
+                    <div class="h-96 flex items-center justify-center">
+                        <canvas id="licensePieChart" class="max-h-full max-w-full"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Recently Added Licenses</h3>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ticket ID</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        System</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Name</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Assignment Date</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-licenses-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Recent licenses will be populated here by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-recent-licenses" class="text-center text-gray-500 py-4 hidden">No recent licenses to
+                        display.</p>
+                    <div id="dashboard-recent-pagination" class="mt-6 flex justify-end items-center space-x-4"></div>
+                </div>
+            </section>
+
+            <!-- Generic System Analytics Section -->
+            <section id="system-analytics-section" class="main-content-section hidden">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 id="system-analytics-title" class="text-4xl font-extrabold text-gray-800">System License
+                        Analytics</h2>
+                    <button id="back-to-dashboard-button"
+                        class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg shadow-sm hover:bg-gray-400 transition flex items-center">
+                        <i class="lucide lucide-arrow-left mr-2 w-5 h-5"></i> Back to Dashboard
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 id="system-type-distribution-title" class="text-2xl font-bold text-gray-800 mb-6">License
+                            Type Distribution (Active)</h3>
+                        <div class="h-96 flex items-center justify-center">
+                            <canvas id="systemTypePieChart" class="max-h-full max-w-full"></canvas>
+                        </div>
+                        <p id="no-system-type-data" class="text-center text-gray-500 py-4 hidden">No active license type
+                            data to display.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-6">License Assignment Trend (Active)</h3>
+                        <div class="h-96 flex items-center justify-center">
+                            <canvas id="systemAssignmentLineChart" class="max-h-full max-w-full"></canvas>
+                        </div>
+                        <p id="no-system-trend-data" class="text-center text-gray-500 py-4 hidden">No active license
+                            trend data to display.</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 id="all-system-licenses-title" class="text-2xl font-bold text-gray-800 mb-6">All Licenses
+                        Overview</h3>
+                    <div class="flex justify-end mb-4">
+                        <button id="export-system-csv"
+                            class="py-2 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out">
+                            Export System Data to CSV
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr id="system-table-header">
+                                    <!-- Dynamic header for system licenses -->
+                                </tr>
+                            </thead>
+                            <tbody id="system-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- System license data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-system-licenses-data" class="text-center text-gray-500 py-4 hidden">No license data
+                        available for this system.</p>
+                    <div id="system-pagination" class="mt-6 flex justify-end items-center space-x-4"></div>
+                </div>
+            </section>
+
+            <!-- Add License Section -->
+            <section id="add-license-section" class="main-content-section hidden">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-8">Add New License</h2>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <form id="license-form" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="ticketId" class="block text-sm font-medium text-gray-700">Ticket ID</label>
+                                <input type="text" id="ticketId" name="ticketId"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="system" class="block text-sm font-medium text-gray-700">Select
+                                    System</label>
+                                <select id="system" name="system"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                                    required>
+                                    <option value="">-- Select System --</option>
+                                    <option value="DMS">DMS</option>
+                                    <option value="LSQ">LSQ</option>
+                                    <option value="CRM">CRM</option>
+                                    <option value="ZOHO">ZOHO</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="name" class="block text-sm font-medium text-gray-700">License Holder
+                                    Name</label>
+                                <input type="text" id="name" name="name"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="mobile" class="block text-sm font-medium text-gray-700">Mobile
+                                    Number</label>
+                                <input type="tel" id="mobile" name="mobile"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700">Email ID</label>
+                                <input type="email" id="email" name="email"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                            </div>
+                            <div class="relative">
+                                <label for="requestedDate" class="block text-sm font-medium text-gray-700">Requested
+                                    Date</label>
+                                <input type="date" id="requestedDate" name="requestedDate"
+                                    class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="requestorName" class="block text-sm font-medium text-gray-700">Requestor
+                                    Name</label>
+                                <input type="text" id="requestorName" name="requestorName"
+                                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                    required>
+                            </div>
+                            <div class="relative">
+                                <label for="assignmentDate" class="block text-sm font-medium text-gray-700">Assignment
+                                    Date</label>
+                                <input type="date" id="assignmentDate" name="assignmentDate"
+                                    class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                                    required>
+                            </div>
+                            <!-- Removed 'requestType' and 'expiryDate' from this form as per request -->
+                            <div>
+                                <label for="addAttachmentFile" class="block text-sm font-medium text-gray-700">Attach
+                                    Proof (PDF, DOC, JPG, PNG)</label>
+                                <input type="file" id="addAttachmentFile" name="addAttachmentFile"
+                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                    class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            </div>
+                        </div>
+
+                        <!-- Dependent Fields Container -->
+                        <div id="dependent-fields-container"
+                            class="border border-gray-200 rounded-lg p-6 mt-6 bg-gray-50 grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <p class="col-span-full text-center text-gray-500" id="dependent-fields-placeholder">Select
+                                a System to see specific fields.</p>
+                            <!-- DMS Fields -->
+                            <div id="dms-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full">
+                                <div><label for="dmsDealerName" class="block text-sm font-medium text-gray-700">Dealer
+                                        Name</label><input type="text" id="dmsDealerName" name="dmsDealerName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="dmsDealerCode" class="block text-sm font-medium text-gray-700">Dealer
+                                        Code</label><input type="text" id="dmsDealerCode" name="dmsDealerCode"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="dmsLocationCode"
+                                        class="block text-sm font-medium text-gray-700">Location Code</label><input
+                                        type="text" id="dmsLocationCode" name="dmsLocationCode"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="dmsCity"
+                                        class="block text-sm font-medium text-gray-700">City</label><input type="text"
+                                        id="dmsCity" name="dmsCity"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="dmsHubName" class="block text-sm font-medium text-gray-700">Hub
+                                        Name</label><input type="text" id="dmsHubName" name="dmsHubName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                            </div>
+                            <!-- LSQ Fields -->
+                            <div id="lsq-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full">
+                                <div>
+                                    <label for="lsqLicenseType" class="block text-sm font-medium text-gray-700">License
+                                        Type</label>
+                                    <select id="lsqLicenseType" name="lsqLicenseType"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                        <option value="">-- Select License Type --</option>
+                                        <option value="Regular User">Regular User</option>
+                                        <option value="Mobile User">Mobile User</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="lsqTeam" class="block text-sm font-medium text-gray-700">Team</label>
+                                    <select id="lsqTeam" name="lsqTeam"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                        <option value="">-- Select Team --</option>
+                                        <option value="Revolt Internal">Revolt Internal</option>
+                                        <option value="Call Centre">Call Centre</option>
+                                        <option value="Dealer">Dealer</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div><label for="lsqSalesExecutiveName"
+                                        class="block text-sm font-medium text-gray-700">Sales Executive
+                                        Name</label><input type="text" id="lsqSalesExecutiveName"
+                                        name="lsqSalesExecutiveName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="lsqMobileNumber" class="block text-sm font-medium text-gray-700">Mobile
+                                        Number</label><input type="tel" id="lsqMobileNumber" name="lsqMobileNumber"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="lsqHubName" class="block text-sm font-medium text-gray-700">Hub
+                                        Name</label><input type="text" id="lsqHubName" name="lsqHubName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="lsqCity"
+                                        class="block text-sm font-medium text-gray-700">City</label><input type="text"
+                                        id="lsqCity" name="lsqCity"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                            </div>
+                            <!-- CRM Fields -->
+                            <div id="crm-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full">
+                                <div><label for="crmDealerName" class="block text-sm font-medium text-gray-700">Dealer
+                                        Name</label><input type="text" id="crmDealerName" name="crmDealerName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="crmHubName" class="block text-sm font-medium text-gray-700">Hub
+                                        Name</label><input type="text" id="crmHubName" name="crmHubName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="crmCity"
+                                        class="block text-sm font-medium text-gray-700">City</label><input type="text"
+                                        id="crmCity" name="crmCity"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                            </div>
+                            <!-- ZOHO Fields -->
+                            <div id="zoho-fields" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 col-span-full">
+                                <div><label for="zohoFirstName" class="block text-sm font-medium text-gray-700">First
+                                        Name</label><input type="text" id="zohoFirstName" name="zohoFirstName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="zohoLastName" class="block text-sm font-medium text-gray-700">Last
+                                        Name</label><input type="text" id="zohoLastName" name="zohoLastName"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="zohoEmailAddress" class="block text-sm font-medium text-gray-700">Email
+                                        Address</label><input type="email" id="zohoEmailAddress" name="zohoEmailAddress"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div><label for="zohoRole"
+                                        class="block text-sm font-medium text-gray-700">Role</label><input type="text"
+                                        id="zohoRole" name="zohoRole"
+                                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                                <div class="relative"><label for="zohoAccountCreatedTime"
+                                        class="block text-sm font-medium text-gray-700">Account Created
+                                        Time</label><input type="date" id="zohoAccountCreatedTime"
+                                        name="zohoAccountCreatedTime"
+                                        class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-8 flex justify-end">
+                            <button type="submit"
+                                class="py-3 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out text-lg">
+                                Submit License
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Remove License Section -->
+            <section id="remove-license-section" class="main-content-section hidden">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-8">Remove License</h2>
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Search & Filter Licenses</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label for="removeFilterSystem"
+                                class="block text-sm font-medium text-gray-700">System</label>
+                            <select id="removeFilterSystem"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                <option value="">All Systems</option>
+                                <option value="DMS">DMS</option>
+                                <option value="LSQ">LSQ</option>
+                                <option value="CRM">CRM</option>
+                                <option value="ZOHO">ZOHO</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="removeFilterStatus"
+                                class="block text-sm font-medium text-gray-700">Status</label>
+                            <select id="removeFilterStatus"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                <option value="">All Statuses</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="relative">
+                            <label for="removeFilterStartDate"
+                                class="block text-sm font-medium text-gray-700">Assignment Start Date</label>
+                            <input type="date" id="removeFilterStartDate"
+                                class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        </div>
+                        <div class="relative">
+                            <label for="removeFilterEndDate" class="block text-sm font-medium text-gray-700">Assignment
+                                End Date</label>
+                            <input type="date" id="removeFilterEndDate"
+                                class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        </div>
+                        <div class="col-span-full md:col-span-2">
+                            <label for="search-query" class="block text-sm font-medium text-gray-700">Search by Name,
+                                Email, or Mobile</label>
+                            <input type="text" id="search-query" placeholder="Search by Name, Email, or Mobile"
+                                class="mt-1 flex-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full">
+                        </div>
+                        <div class="col-span-full md:col-span-2 flex items-end space-x-4">
+                            <button id="remove-apply-filters-button"
+                                class="py-2 px-6 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-150 ease-in-out w-full">
+                                Apply Filters & Search
+                            </button>
+                            <button id="remove-clear-filters-button"
+                                class="py-2 px-6 bg-gray-400 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-150 ease-in-out w-full">
+                                Clear Filters
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Select</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ticket ID</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        System</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Name</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Email</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Assignment Date</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Attachment</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="search-results-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Search results will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-search-results" class="text-center text-gray-500 py-4 hidden">No licenses found matching
+                        your search.</p>
+                </div>
+
+                <div id="remove-license-details-card" class="bg-white p-8 rounded-xl shadow-lg hidden">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Remove License Details for: <span
+                            id="selected-license-name" class="text-indigo-700"></span></h3>
+                    <form id="remove-license-form" class="space-y-6">
+                        <div>
+                            <label for="removeTicketId" class="block text-sm font-medium text-gray-700">Ticket ID (for
+                                removal)</label>
+                            <input type="text" id="removeTicketId" name="removeTicketId"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"
+                                required>
+                        </div>
+                        <div class="relative">
+                            <label for="removalDate" class="block text-sm font-medium text-gray-700">Removal
+                                Date</label>
+                            <input type="date" id="removalDate" name="removalDate"
+                                class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm bg-white"
+                                required>
+                        </div>
+                        <div>
+                            <label for="removalReason" class="block text-sm font-medium text-gray-700">Reason for
+                                Removal</label>
+                            <textarea id="removalReason" name="removalReason" rows="3"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"
+                                required></textarea>
+                        </div>
+                        <div>
+                            <label for="removerName" class="block text-sm font-medium text-gray-700">Name of
+                                Remover</label>
+                            <input type="text" id="removerName" name="removerName"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"
+                                required>
+                        </div>
+                        <div>
+                            <label for="removeAttachmentFile" class="block text-sm font-medium text-gray-700">Attach
+                                Proof (PDF, DOC, JPG, PNG)</label>
+                            <input type="file" id="removeAttachmentFile" name="removeAttachmentFile"
+                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                                class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        </div>
+                        <div class="mt-8 flex justify-end">
+                            <button type="submit"
+                                class="py-3 px-6 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-150 ease-in-out text-lg">
+                                Confirm Removal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports-section" class="main-content-section hidden">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-8">License Reports</h2>
+                <div class="bg-white p-8 rounded-xl shadow-lg mb-8">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-6">Filter Reports</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+                        <div>
+                            <label for="filterSystem" class="block text-sm font-medium text-gray-700">System</label>
+                            <select id="filterSystem"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                <option value="">All Systems</option>
+                                <option value="DMS">DMS</option>
+                                <option value="LSQ">LSQ</option>
+                                <option value="CRM">CRM</option>
+                                <option value="ZOHO">ZOHO</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="filterStatus" class="block text-sm font-medium text-gray-700">Status</label>
+                            <select id="filterStatus"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                <option value="">All Statuses</option>
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="relative">
+                            <label for="filterStartDate" class="block text-sm font-medium text-gray-700">Assignment
+                                Start Date</label>
+                            <input type="date" id="filterStartDate"
+                                class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        </div>
+                        <div class="relative">
+                            <label for="filterEndDate" class="block text-sm font-medium text-gray-700">Assignment End
+                                Date</label>
+                            <input type="date" id="filterEndDate"
+                                class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                        </div>
+                        <div class="col-span-full md:col-span-1 flex items-end space-x-4">
+                            <button id="apply-filters-button"
+                                class="py-2 px-6 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 ease-in-out w-full">
+                                Apply Filters
+                            </button>
+                            <button id="clear-filters-button"
+                                class="py-2 px-6 bg-gray-400 text-gray-800 font-semibold rounded-lg shadow-md hover:bg-gray-500 transition duration-150 ease-in-out w-full">
+                                Clear Filters
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-4 mb-6">
+                        <button id="export-dump-csv"
+                            class="py-2 px-6 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-150 ease-in-out">
+                            Export All Data to CSV
+                        </button>
+                        <button id="export-filtered-csv"
+                            class="py-2 px-6 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition duration-150 ease-in-out">
+                            Export Filtered Data to CSV
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr id="reports-table-header">
+                                    <!-- Dynamic header will be populated here -->
+                                </tr>
+                            </thead>
+                            <tbody id="reports-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Report data will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-reports-data" class="text-center text-gray-500 py-4 hidden">No license data available for
+                        reports.</p>
+                    <div id="reports-pagination" class="mt-6 flex justify-end items-center space-x-4"></div>
+                </div>
+            </section>
+
+            <!-- Tickets Section -->
+            <section id="tickets-section" class="main-content-section hidden">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-8">License Request Tickets</h2>
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="overflow-x-auto rounded-lg border border-gray-200 shadow-sm">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Ticket ID</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Action</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Timestamp</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Status</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Notes</th>
+                                    <th scope="col"
+                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tickets-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Tickets will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <p id="no-tickets" class="text-center text-gray-500 py-4 hidden">No tickets to display.</p>
+                    <div id="tickets-pagination" class="mt-6 flex justify-end items-center space-x-4"></div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Custom Warning/Confirmation Modal (HIGHEST Z-INDEX) -->
+    <div id="custom-modal"
+        class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-[60]">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-sm">
+            <h3 id="modal-title" class="text-xl font-bold text-gray-800 mb-4">Confirm Action</h3>
+            <p id="modal-message" class="text-gray-700 mb-6">Are you sure you want to proceed?</p>
+            <div class="flex justify-end space-x-4">
+                <button id="modal-cancel-button"
+                    class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg shadow-sm hover:bg-gray-400 transition">Cancel</button>
+                <button id="modal-confirm-button"
+                    class="py-2 px-4 bg-indigo-600 text-white rounded-lg shadow-sm hover:bg-indigo-700 transition">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reactivate License Modal (LOWER Z-INDEX than custom-modal) -->
+    <div id="reactivate-modal"
+        class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-50">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Reactivate License for: <span id="reactivate-license-name"
+                    class="text-indigo-700"></span></h3>
+            <form id="reactivate-form" class="space-y-4">
+                <div>
+                    <label for="reactivateReason" class="block text-sm font-medium text-gray-700">Reason for
+                        Reactivation</label>
+                    <textarea id="reactivateReason" name="reactivateReason" rows="3"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"
+                        required></textarea>
+                </div>
+                <div class="relative">
+                    <label for="newAssignmentDate" class="block text-sm font-medium text-gray-700">New Assignment
+                        Date</label>
+                    <input type="date" id="newAssignmentDate" name="newAssignmentDate"
+                        class="mt-1 block w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white"
+                        required>
+                </div>
+                <div>
+                    <label for="reactivateAttachmentFile" class="block text-sm font-medium text-gray-700">Attach Proof
+                        (PDF, DOC, JPG, PNG)</label>
+                    <input type="file" id="reactivateAttachmentFile" name="reactivateAttachmentFile"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="reactivate-cancel-button"
+                        class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg shadow-sm hover:bg-gray-400 transition">Cancel</button>
+                    <button type="submit"
+                        class="py-2 px-4 bg-green-600 text-white rounded-lg shadow-sm hover:bg-green-700 transition">Reactivate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Ticket Notes Modal (NEW) -->
+    <div id="ticket-notes-modal"
+        class="hidden fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center p-4 z-55">
+        <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Edit Notes for Ticket: <span id="ticket-notes-id"
+                    class="text-indigo-700"></span></h3>
+            <form id="ticket-notes-form" class="space-y-4">
+                <div>
+                    <label for="ticketNotesContent" class="block text-sm font-medium text-gray-700">Notes</label>
+                    <textarea id="ticketNotesContent" name="ticketNotesContent" rows="6"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm"></textarea>
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="ticket-notes-cancel-button"
+                        class="py-2 px-4 bg-gray-300 text-gray-800 rounded-lg shadow-sm hover:bg-gray-400 transition">Cancel</button>
+                    <button type="submit"
+                        class="py-2 px-4 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 transition">Save
+                        Notes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-notification"
+        class="fixed bottom-4 right-4 p-4 rounded-xl shadow-lg text-white max-w-sm z-[70] flex items-center space-x-3"
+        style="background-color: #22C55E;">
+        <i class="lucide lucide-check-circle w-6 h-6"></i>
+        <p id="toast-message" class="text-sm font-medium"></p>
+    </div>
+
+
+</body>
+
+</html>
